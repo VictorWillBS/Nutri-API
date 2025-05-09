@@ -1,11 +1,11 @@
 services:
     laravel.test:
         build:
-            context: './vendor/laravel/sail/runtimes/8.4'
+            context: ./vendor/laravel/sail/runtimes/8.4
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.4/app'
+        image: sail-8.4/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -23,6 +23,7 @@ services:
             - sail
         depends_on:
             - mysql
+            - mongodb
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -47,9 +48,30 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+    mongodb:
+        image: 'mongodb/mongodb-atlas-local:latest'
+        environment:
+            - 'MONGODB_INITDB_ROOT_USERNAME=${MONGODB_USERNAME:-}'
+            - 'MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD:-}'
+        volumes:
+            - 'sail-mongodb:/data/db'
+        ports:
+            - '${FORWARD_MONGODB_PORT:-27017}:27017'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - mongosh
+                - 'mongodb://localhost:27017/admin'
+                - '--eval=db.runCommand({ping:1})'
+            retries: 3
+            timeout: 5s
 networks:
     sail:
         driver: bridge
 volumes:
     sail-mysql:
+        driver: local
+    sail-mongodb:
         driver: local
