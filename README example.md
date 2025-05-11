@@ -25,7 +25,7 @@ O projeto tem como objetivo dar suporte a equipe de nutricionistas da empresa Fi
 Para a definição do modelo, consultar o arquivo [products.json](./products.json) que foi exportado do Open Food Facts, um detalhe importante é que temos dois campos personalizados para poder fazer o controle interno do sistema e que deverão ser aplicados em todos os alimentos no momento da importação, os campos são:
 
 - `imported_t`: campo do tipo Date com a dia e hora que foi importado;
-- `status`: campo do tipo Enum com os possíveis valores draft, trash e published;
+- `status`: campo do tipo Enum com os possíveis valores draft, trash e pub  lished;
 
 ### Sistema do CRON
 

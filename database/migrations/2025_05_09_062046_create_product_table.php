@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('url');
             $table->json('data');
             $table->string('status');
-            $table->string('imported_t');
+            $table->date('imported_t');
             $table->softDeletes();
             $table->timestamps();
         });

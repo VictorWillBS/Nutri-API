@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+
+    'coodesh' => [
+        'endpoint' => env('COODESH_IMPORT_ENDPOINT'),
+    ]
 ];

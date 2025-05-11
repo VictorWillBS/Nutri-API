@@ -2,10 +2,12 @@
 
 namespace App\Jobs\Import;
 
+use App\Models\Import;
+use App\Modules\Imports\Repositories\Imports;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class ImportProducts implements ShouldQueue
+class ProcessReadyImports implements ShouldQueue
 {
     use Queueable;
 
@@ -20,8 +22,9 @@ class ImportProducts implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(Imports $imports): void
     {
-        //
+        $imports->allReady()
+            ->each(fn ($import) => dispatch(new ProcessImportData($import)));
     }
 }
