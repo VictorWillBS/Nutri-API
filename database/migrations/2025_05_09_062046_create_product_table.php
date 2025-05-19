@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('url');
             $table->json('data');
             $table->string('status');
-            $table->date('imported_t');
+            $table->datetime('imported_t');
+            $table->datetime('synced_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
