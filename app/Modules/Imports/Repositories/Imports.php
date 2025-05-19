@@ -27,9 +27,4 @@ class Imports
     {
         return $this->import->newQuery()->whereStatus(SyncStatus::Ready)->get();
     }
-
-    public function oldestDownloaded(): ?Import
-    {
-        return $this->import->newQuery()->whereStatus(SyncStatus::Downloaded)->orderBy('created_at', 'desc')->first();
-    }
 }
