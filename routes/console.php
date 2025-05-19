@@ -1,16 +1,14 @@
 <?php
 
+use App\Jobs\Import\ContinueProcessingFailedImports;
+use App\Jobs\Import\DeleteCompletedImports;
 use App\Jobs\Import\DispatchDownloadPendingImports;
 use App\Jobs\Import\ProcessReadyImports;
 use App\Jobs\Products\DailyProductsUpdate;
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
-
 Schedule::job(new DispatchDownloadPendingImports())->everyMinute();
-Schedule::job(new ProcessReadyImports())->everyFiveMinutes();
+Schedule::job(new ProcessReadyImports())->everyMinute();
+Schedule::job(new ContinueProcessingFailedImports())->everyTenMinutes();
+Schedule::job(new DeleteCompletedImports())->everyFiveMinutes();
 Schedule::job(new DailyProductsUpdate())->everyTenMinutes();
