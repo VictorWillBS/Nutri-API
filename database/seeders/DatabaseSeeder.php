@@ -2,10 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\SyncStatus;
-use App\Models\Import;
-use App\Models\Product;
-use App\Models\User;
+use Database\Seeders\Setup\AddFirstImportIndex;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,11 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $import = new Import();
-        $import->filename = 'index.txt';
-        $import->status = SyncStatus::NotStarted;
-        $import->final_convert = Product::class;
-        $import->type = Import::class;
-        $import->save();
+       $firstImport = new AddFirstImportIndex();
+       $firstImport->run();
     }
 }
