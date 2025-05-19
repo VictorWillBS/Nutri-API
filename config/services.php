@@ -35,8 +35,11 @@ return [
         ],
     ],
 
-
     'coodesh' => [
         'endpoint' => env('COODESH_IMPORT_ENDPOINT'),
-    ]
+    ],
+
+    'openfoodfacts' => [
+        'endpoint' => env('OPEN_FOOD_FACTS_ENDPOINT'),
+    ],
 ];
