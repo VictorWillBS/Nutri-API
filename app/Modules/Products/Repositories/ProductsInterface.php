@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Modules\Products\Repositories;
 
 use App\Models\Product;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface ProductsInterface
 {
-    public function all(): Collection;
+    public function all(): LengthAwarePaginator;
 
-    public function delete(int $id): void;
+    public function allAbleToDailyUpdate(): Collection;
 
-    public function findOrFail(int $id): Product;
+    public function delete(string $code): void;
 
-    public function update(array $data): Product;
+    public function firstByCodeOrFail(string $code): Product;
+
+    public function update(string $code, array $data): Product;
 }

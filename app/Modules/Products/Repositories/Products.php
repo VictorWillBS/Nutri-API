@@ -4,35 +4,46 @@ declare(strict_types=1);
 
 namespace App\Modules\Products\Repositories;
 
-use App\Enums\ProductStatus;
+use App\Enums\Products\ProductStatus;
 use App\Models\Product;
+use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class Products
 {
    public function __construct(protected Product $product) {}
 
-    public function all(): Collection
+    public function all(): LengthAwarePaginator
     {
-        return $this->product->newQuery()->all();
+        return Product::paginate(10);
     }
 
-    public function delete(int $id): void
+    public function allAbleToDailyUpdate(): Collection
     {
-        $product = $this->findOrFail($id);
+        return $this->product->whereNot('status', ProductStatus::Trashed)
+            ->where('synced_at', '<', Carbon::today())
+            ->orWhere('synced_at', null)
+            ->limit(50)
+            ->get();
+    }
 
+    public function delete(string $code): void
+    {
+        $product = $this->firstByCodeOrFail($code);
         $product->status = ProductStatus::Trashed;
-        $product->trashed();
+        $product->save();
+        $product->delete();
     }
 
-    public function findOrFail(int $id): Product
+    public function firstByCodeOrFail(string $code): Product
     {
-        return $this->product->findOrFail($id);
+        return $this->product->whereCode($code)->firstOrFail();
     }
 
-    public function update(array $data): Product
+    public function update(string $code, array $data): Product
     {
-        $product = $this->findOrFail($data['id']);
+        $product = $this->firstByCodeOrFail($code);
         $product->fill($data);
         $product->save();
 
