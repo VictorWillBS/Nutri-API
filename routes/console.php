@@ -1,11 +1,10 @@
 <?php
 
 use App\Jobs\Import\DispatchDownloadPendingImports;
-use App\Jobs\Import\DispatchPendingProcessImport;
 use App\Jobs\Import\ProcessReadyImports;
+use App\Jobs\Products\DailyProductsUpdate;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
@@ -13,5 +12,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::job(new DispatchDownloadPendingImports())->everyMinute();
-Schedule::job(new ProcessReadyImports())->everyThirtySeconds();
-Schedule::job(new DispatchPendingProcessImport)->everyMinute();
+Schedule::job(new ProcessReadyImports())->everyFiveMinutes();
+Schedule::job(new DailyProductsUpdate())->everyTenMinutes();
