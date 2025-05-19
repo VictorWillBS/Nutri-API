@@ -23,14 +23,18 @@ class ConvertFileToData implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(FileEditor $fileEditor): void
+    public function handle(): void
     {
         $path = str_replace('App\\Models\\', '', $this->import->type);
         $fileEditor = new FileEditor($this->import->filename, $path);
         $data = $fileEditor->get();
 
-        if (is_string($data)) {
-            $data =$fileEditor->txtToArray();
+        if (str_ends_with($this->import->filename, '.txt')) {
+            $data = $fileEditor->txtToArray();
+        }
+
+        if (str_ends_with($this->import->filename, '.json')) {
+            $data = json_decode($data, true);
         }
 
         $convertedData = resolve($this->import->type)->convert($data, $this->import);
