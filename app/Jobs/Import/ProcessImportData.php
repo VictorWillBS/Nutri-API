@@ -11,17 +11,8 @@ class ProcessImportData implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(protected $import)
-    {
-        //
-    }
+    public function __construct(protected Import $import) {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $this->import->update(['status' => SyncStatus::Processing]);

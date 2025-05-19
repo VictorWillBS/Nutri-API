@@ -23,8 +23,19 @@ class Imports
     {
         return $this->import->newQuery()->whereStatus(SyncStatus::NotStarted)->get();
     }
+
     public function allReady(): Collection
     {
         return $this->import->newQuery()->whereStatus(SyncStatus::Ready)->get();
+    }
+
+    public function allCompleted(): Collection
+    {
+        return $this->import->newQuery()->where('Status', SyncStatus::Completed)->get();
+    }
+
+     public function allProcessing(): Collection
+    {
+        return $this->import->newQuery()->where('Status', SyncStatus::Processing)->get();
     }
 }

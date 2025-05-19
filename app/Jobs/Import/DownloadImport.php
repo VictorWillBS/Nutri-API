@@ -13,17 +13,8 @@ class DownloadImport implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(protected Import $import)
-    {
-        //
-    }
+    public function __construct(protected Import $import) {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(ServicesImport $service): void
     {
         $this->import->update(['status' => SyncStatus::Started]);

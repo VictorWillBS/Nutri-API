@@ -36,6 +36,6 @@ class DailyProductsUpdate implements ShouldQueue
                 $product->save();
             });
 
-        $redis->set('cron_last_execution', now()->toDateString());
+        $redis->set('cron_last_execution', now()->toDateTimeString());
     }
 }

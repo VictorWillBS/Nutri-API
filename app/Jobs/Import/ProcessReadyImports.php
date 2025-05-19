@@ -13,22 +13,13 @@ class ProcessReadyImports implements ShouldQueue,ShouldBeUnique
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct() {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(Imports $imports, RedisManager $redis): void
     {
         $imports->allReady()
             ->each(fn ($import) => dispatch(new ProcessImportData($import)));
 
-        $redis->set('cron_last_execution', now()->toDateString());
+        $redis->set('cron_last_execution', now()->toDateTimeString());
     }
 }

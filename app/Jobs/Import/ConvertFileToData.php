@@ -12,17 +12,8 @@ class ConvertFileToData implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(protected Import $import)
-    {
-        //
-    }
+    public function __construct(protected Import $import) {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $path = str_replace('App\\Models\\', '', $this->import->type);
