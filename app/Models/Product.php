@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\ProductStatus;
+use App\Enums\Products\ProductStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,21 +28,25 @@ class Product extends Model
     {
         return [
             'data' => AsArrayObject::class,
+            'imported_t' => 'datetime',
         ];
     }
 
-    public function convert(array $data, Import $import): array
+    public function convert(array $data): array
     {
-        return [];
         return array_map(
-            fn($data) => [
-                'code' => $data['code'],
-                'data' => Arr::except($data, ['code', 'product_name', 'url']),
-                'name' => $data['product_name'],
-                'url' => $data['url'],
-                'status' => ProductStatus::Published,
-                'imported_t' => now()
-            ],
+            function ($data) {
+                $data = json_decode($data, true);
+
+                return [
+                    'code' => preg_replace('/[^\d]+/', '', $data['code']),
+                    'data' => Arr::except($data, ['code', 'product_name', 'url']),
+                    'name' => $data['product_name'],
+                    'url' => $data['url'],
+                    'status' => ProductStatus::Published,
+                    'imported_t' => Carbon::now()->format('Y-m-d H:i:s'),
+                ];
+            },
             $data
         );
     }
