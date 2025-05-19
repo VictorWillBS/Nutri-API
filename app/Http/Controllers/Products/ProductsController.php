@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Products\UpdateProductRequest;
 use App\Modules\Products\Repositories\Products;
-use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
@@ -15,18 +15,18 @@ class ProductsController extends Controller
         return $this->products->all();
     }
 
-    public function show(int $id)
+    public function show(string $code)
     {
-        return $this->products->findOrFail($id);
+        return $this->products->firstByCodeOrFail($code);
     }
 
-    public function update(Request $request)
+    public function update(string $code, UpdateProductRequest $request)
     {
-        return $this->products->update($request->all());
+        return $this->products->update($code, $request->all());
     }
 
-    public function delete(int $id)
+    public function destroy(string $code)
     {
-        return $this->products->delete($id);
+        return $this->products->delete($code);
     }
 }
