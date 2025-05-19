@@ -26,12 +26,12 @@ class FileEditor
             $this->content = $this->decompress();
         }
 
-        Storage::put($this->path, $this->content);
+        Storage::put($this->path, trim($this->content));
     }
 
     public function get(): array|string
     {
-        $content =  Storage::get($this->path);
+        $content = Storage::get($this->path);
         $this->content = $content;
         return $content;
     }
@@ -39,8 +39,14 @@ class FileEditor
     public function txtToArray(): array
     {
         $result = [];
+        $index = 0;
         foreach (explode("\n", $this->content) as $line) {
+            if ($index >= 100) {
+                return array_filter($result);
+            }
+
             $result[] = trim($line);
+            $index++;
         }
 
         return array_filter($result);
@@ -73,7 +79,7 @@ class FileEditor
 
         $this->filename = str_replace('.gz', '', $this->filename);
         $this->updatePath();
-        return json_encode(array_chunk($this->txtToArray(), self::MAX_CHUCK_OF_GZ));
+        return json_encode(array_chunk($this->txtToArray(), self::MAX_CHUCK_OF_GZ)[0]);
 
     }
 
